@@ -1,0 +1,34 @@
+How to make Passim work on Puhti
+
+(Using these instructions as the basis: 
+  https://programminghistorian.org/en/lessons/detecting-text-reuse-with-passim#linux-instructions )
+
+Step 1)
+Check java with:
+  java -version
+It should be 1.8.0_252 or similar starting with 1.8.0.
+
+Step 2)
+Download and unpack sbt from here (I used version 1.9.7): 
+  https://github.com/sbt/sbt/releases/
+to your project's projappl partition (not scratch!).
+NB! The way to install sbt described in the Programming Historian's instructions doesn't work! 
+
+Step 3)
+Download and unpack Spark from here:
+  https://archive.apache.org/dist/spark/spark-3.1.2/ 
+NB! The address given by Programming Historian doesn't work
+
+Step 4)
+Add permanently to path by opening .bashrc with e.g. nano:
+  nano ~/.bashrc
+and then adding these lines to the end of the file (check that they point to correct folders):
+  export PATH="/projappl/<project_number>/sbt/bin:$PATH"
+  export PATH="/projappl/<project_number>/spark-3.1.2-bin-hadoop2.7/bin:$PATH"
+  export PATH="/projappl/<project_number>/Passim/bin:$PATH"
+and finally update bashrc:
+  source ~/.bashrc
+
+Step 5)
+Check that Passim works with:
+  passim --help
