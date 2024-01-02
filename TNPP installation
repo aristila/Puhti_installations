@@ -1,0 +1,39 @@
+How to install Turku Neural Parser Pipeline to Puhti 
+...and make it work somehow
+
+
+Basic installation instructions can be found here:
+http://turkunlp.org/Turku-neural-parser-pipeline/ 
+
+COPY OF INSTRUCTIONS:
+
+git clone https://github.com/TurkuNLP/Turku-neural-parser-pipeline.git
+cd Turku-neural-parser-pipeline
+python3 -m venv venv-tnpp
+source venv-tnpp/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade setuptools
+python3 -m pip install -r requirements.txt
+
+BUT !!!!!
+
+you need to install torchmetrics v0.6.0 instead of a newer version to make everything work!
+(hint got from here: https://github.com/NVIDIA/DeepLearningExamples/issues/1113#issuecomment-1102969461) 
+
+THEN 
+
+fetch the model:
+
+python3 fetch_models.py fi_tdt_dia 
+
+BUT !!!!!
+
+I only got this running like in the simplest example given on the TNPP site:
+
+echo "Minulla on koira." | python3 tnpp_parse.py --conf models_fi_tdt_dia/pipelines.yaml parse_plaintext
+
+Luckily I was able to procss my texts into one large file with metadata, which I was able to feed into TNPP like this:
+
+cat /path/to/large_pre-processed_file_with_metadata.txt | python3 /path/to/tnpp_parse.py --conf models_fi_tdt_dia/pipelines.yaml parse_plaintext >> /save/to/large_pre-processed_file_with_metadata.conllu
+
+
