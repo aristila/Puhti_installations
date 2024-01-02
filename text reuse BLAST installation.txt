@@ -1,0 +1,19 @@
+These are the new instructions that work:
+https://github.com/COMHIS/text-reuse-blast-custom
+
+also now a newer version of gcc can be used:
+module load gcc/11.3.0
+module load python-data
+
+BUT !!!!
+
+You can't run the last phase (filling) with more than one thread.
+What I did was run the full thing with 2-4 threads (2 was always stable, more could crash unpredictably) and let it crash on the filling part.
+Then I would run the filling phase separately with just one thread.
+Like this: 
+  srun python /path/to/run_full.py --data_folder="/path/to/data/folder/" --output_folder="/path/to/output/folder" --language=FIN --threads=2 --e_value=1e-35 --word_size=7 --min_length=10 --max_length=1000
+>>>> it crashes, the last line before the crash should say "YYYY-MM-DD HH:MM:SS,SSS - FULL BLAST - INFO - Filling clusters...", after that I run this:
+  srun python /path/to/filler.py --output_folder="/path/to/output/folder" --language="FIN" --threads=1
+
+
+
