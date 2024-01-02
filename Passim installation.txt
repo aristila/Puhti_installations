@@ -1,34 +1,33 @@
 How to make Passim work on Puhti
 
-(Using these instructions as the basis: 
-  https://programminghistorian.org/en/lessons/detecting-text-reuse-with-passim#linux-instructions )
+I first tried using these instructions as the basis: 
+  https://programminghistorian.org/en/lessons/detecting-text-reuse-with-passim#linux-instructions 
+but it is outdated and it's better to just follow the GitHub instructions:
+  https://github.com/dasmiq/passim
 
-Step 1)
+Step 1) JAVA
+Checking the Java version on the login node is not enough, since the version on the actual computing node will not be the same. 
+However, just loading module "biojava" in your script should be enough to ensure the correct versoin. For example:
+  module load biojava/1.8
+after which Passim wants JAVAHOME variable defined, so that can be done with:
+  export JAVA_HOME=/appl/soft/bio/java/openjdk/jdk8u312-b07 
+(these two lines of code were direct instructions for me from helpdesk; if someone knows how to find out the exact path for any java module, contribute here or let me know in some other way)
 Check java with:
   java -version
-It should be 1.8.0_252 or similar starting with 1.8.0.
+in your batch script.
 
-Step 2)
-Download and unpack sbt from here (I used version 1.9.7): 
-  https://github.com/sbt/sbt/releases/
-to your project's projappl partition (not scratch!).
-NB! The way to install sbt described in the Programming Historian's instructions doesn't work! 
+******************************under construction********************************
+Step 2) APACHE SPARK
+[under construction]
+[possibly use this version https://archive.apache.org/dist/spark/spark-3.1.2/ ]
 
-Step 3)
-Download and unpack Spark from here:
-  https://archive.apache.org/dist/spark/spark-3.1.2/ 
-NB! The address given by Programming Historian doesn't work
+Step 3) INSTALL PASSIM
+Follow GitHub instructions: 
+  https://github.com/dasmiq/passim
 
-Step 4)
-Add permanently to path by opening .bashrc with e.g. nano:
-  nano ~/.bashrc
-and then adding these lines to the end of the file (check that they point to correct folders):
-  export PATH="/projappl/<project_number>/sbt/bin:$PATH"
-  export PATH="/projappl/<project_number>/spark-3.1.2-bin-hadoop2.7/bin:$PATH"
-  export PATH="/projappl/<project_number>/Passim/bin:$PATH"
-and finally update bashrc:
-  source ~/.bashrc
+Step 4) TWEAKING THE BATCH JOB
+[direct instructions from CSC servicedesk:]
+You should be able to adjust the number of parallel workers with the "local[N]" setting to SPARK_SUBMIT_ARGS:
+  export SPARK_SUBMIT_ARGS="--master local[10]"
 
-Step 5)
-Check that Passim works with:
-  passim --help
+
