@@ -1,33 +1,42 @@
 How to make Passim work on Puhti
 
-I first tried using these instructions as the basis: 
-  https://programminghistorian.org/en/lessons/detecting-text-reuse-with-passim#linux-instructions 
-but it is outdated and it's better to just follow the GitHub instructions:
-  https://github.com/dasmiq/passim
+((!These instructions are outdated: https://programminghistorian.org/en/lessons/detecting-text-reuse-with-passim
+here is the updated version: https://github.com/dasmiq/ph-submissions/blob/passim2-replace/en/published/originals/detecting-text-reuse-with-passim.md))
 
 Step 1) JAVA
 Checking the Java version on the login node is not enough, since the version on the actual computing node will not be the same. 
-However, just loading module "biojava" in your script should be enough to ensure the correct versoin. For example:
+However, just loading module "biojava" in your script should be enough to ensure the correct version. For example:
   module load biojava/1.8
-after which Passim wants JAVAHOME variable defined, so that can be done with:
+after which Passim wants JAVAHOME variable defined, which can be done with the following line:
   export JAVA_HOME=/appl/soft/bio/java/openjdk/jdk8u312-b07 
-(these two lines of code were direct instructions for me from helpdesk; if someone knows how to find out the exact path for any java module, contribute here or let me know in some other way)
+(these two lines of code were direct instructions for me from servicedesk; if someone knows how to find out the exact path for any java module, contribute here or let me know in some other way)
 Check java with:
   java -version
 in your batch script.
 
-******************************under construction********************************
 Step 2) APACHE SPARK
-[under construction]
-[possibly use this version https://archive.apache.org/dist/spark/spark-3.1.2/ ]
+There should be no need to install Spark separately if you loaded the two modules mentioned above.
+After loading the modules you can check Spark version with:
+  pyspark --version
+For me it says Spark is version 3.5.0
 
 Step 3) INSTALL PASSIM
 Follow GitHub instructions: 
   https://github.com/dasmiq/passim
+NB! By default Passim installs itself in your home directory. 
+if you do not want that, create a venv or something.
 
 Step 4) TWEAKING THE BATCH JOB
-[direct instructions from CSC servicedesk:]
-You should be able to adjust the number of parallel workers with the "local[N]" setting to SPARK_SUBMIT_ARGS:
-  export SPARK_SUBMIT_ARGS="--master local[10]"
+a)
+You should be able to adjust the number of parallel workers with the "local[N]" setting to SPARK_SUBMIT_ARGS.
+Similarly, adjust the memory usage limits. I used a line like this to run passimP
+  SPARK_SUBMIT_ARGS='--master local[4] --driver-memory 8G --executor-memory 4G' passim path/to/input path/to/output
+b)
+[instructions from CSC servicedesk:]
+Any larger datasets than a small test will probably give an error "No space left on device". Avoid this by using $LOCAL_SCRATCH or giving it some other path to use as a temporary directory: 
+  export _JAVA_OPTIONS="-Djava.io.tmpdir=$LOCAL_SCRATCH/tmp"
+Passim will try to create the directory, so giving it just "$LOCAL_SCRATCH" will end up in an error.
+
+Good luck!
 
 
